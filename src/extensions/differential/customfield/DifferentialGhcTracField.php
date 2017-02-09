@@ -8,6 +8,8 @@ final class DifferentialGhcTracField
 
   private $error;
 
+  const FIELDKEY = 'differential:ghc-trac';
+
   /* -- Core custom field descriptions -------------------------------------- */
   public function getFieldKey() {
     return 'differential:ghc-trac';
@@ -37,13 +39,6 @@ final class DifferentialGhcTracField
     return true;
   }
 
-  public function shouldAppearInCommitMessage() {
-    return true;
-  }
-
-  public function shouldAllowEditInCommitMessage() {
-    return true;
-  }
 
   public function shouldAppearInConduitDictionary() {
     return true;
@@ -53,21 +48,7 @@ final class DifferentialGhcTracField
     return true;
   }
 
-  // Possible alternative labels
-  public function getCommitMessageLabels() {
-    return array(
-      'Trac',
-      'Trac Issue',
-      'Trac Issues',
-      'GHC Trac',
-      'GHC Trac Issue',
-      'GHC Trac Issues',
-    );
-  }
 
-  public function shouldAppearInCommitMessageTemplate() {
-    return true;
-  }
 
   // Rendered when you run 'arc diff'
   public function renderCommitMessageLabel() {
@@ -174,25 +155,6 @@ final class DifferentialGhcTracField
     return $this;
   }
 
-  /* -- Parsing commits ----------------------------------------------------- */
-  public function parseValueFromCommitMessage($value) {
-    // return early if the user didn't provide anything
-    if (!strlen($value)) {
-      return array();
-    }
-
-    return preg_split('/[\s,]+/', $value, $limit = -1, PREG_SPLIT_NO_EMPTY);
-  }
-
-  public function validateCommitMessageValue($value) {
-    foreach ($value as $id) {
-      if (!preg_match('/#(\d+)/', $id)) {
-        throw new DifferentialFieldValidationException(
-          pht('References to GHC Trac issues may only take the form '.
-              '`#XYZ` where `XYZ` refers to an issue number.'));
-      }
-    }
-  }
 
   public function readValueFromCommitMessage($value) {
     $this->setValue($value);
@@ -210,13 +172,6 @@ final class DifferentialGhcTracField
       ->setError($this->error);
   }
 
-  public function renderCommitMessageValue(array $handles) {
-    $value = $this->getValue();
-    if (!$value) {
-      return null;
-    }
-    return implode(', ', $value);
-  }
 
   public function renderPropertyViewValue(array $handles) {
     $links = array();
