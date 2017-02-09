@@ -31,6 +31,10 @@ final class DifferentialGhcTracField
     return true;
   }
 
+  public function shouldAppearInListView() {
+    return true;
+  }
+
   public function shouldAppearInPropertyView() {
     return true; // NOTE: Only appears for 'rGHC', see below.
   }
@@ -48,7 +52,13 @@ final class DifferentialGhcTracField
     return true;
   }
 
+  public function shouldAppearInConduitTransactions(){
+    return true;
+  }
 
+  public function newConduitEditParameterType() {
+    return new ConduitStringListParameterType();
+  }
 
   // Rendered when you run 'arc diff'
   public function renderCommitMessageLabel() {
@@ -58,6 +68,10 @@ final class DifferentialGhcTracField
   // Rendered in the UI when viewing a revision
   public function renderPropertyViewLabel() {
     return pht('Trac Issues');
+  }
+
+  public function readFieldValueFromConduit(array $value) {
+    return $value;
   }
 
   /* -- Transactions -------------------------------------------------------- */
@@ -160,6 +174,7 @@ final class DifferentialGhcTracField
     $this->setValue($value);
     return $this;
   }
+
 
   /* -- Rendering ----------------------------------------------------------- */
   public function renderEditControl(array $handles) {
